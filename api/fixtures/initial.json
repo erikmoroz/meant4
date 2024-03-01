@@ -1,0 +1,20 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$C3vAslhH9T7OlKVk90depE$i99USRPswHlSkdplH34YcvpA8HA1R7rOUSm25kIXaCE=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "meant4",
+      "first_name": "",
+      "last_name": "",
+      "email": "meant4@meant4.local",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-02-28T19:34:22.939Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

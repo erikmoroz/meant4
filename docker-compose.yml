@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:12.18-bullseye
+    networks:
+      - project
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7.2.4
+    networks:
+      - project
+    ports:
+      - "6379:6379"
+
+  minio:
+    image: minio/minio:RELEASE.2024-02-17T01-15-57Z
+    command: server /data
+    volumes:
+      - minio:/data/
+    ports:
+      - "9000:9000"
+    networks:
+      - project
+    env_file:
+      - .env
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: api
+    entrypoint: /src/entrypoint.sh
+    ports:
+      - "8282:8282"
+    tmpfs:
+      - /tmp
+    networks:
+      - project
+    depends_on:
+      - redis
+      - postgres
+      - minio
+    volumes:
+      - ./api:/src/api
+    env_file:
+      - .env
+
+  celery:
+    image: api
+    command: celery --app=project.celery_app:app worker --loglevel=info
+    env_file:
+      - .env
+    networks:
+      - project
+    depends_on:
+      - redis
+      - api
+
+
+networks:
+  project:
+    driver: bridge
+
+volumes:
+  minio:
